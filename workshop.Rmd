@@ -1,0 +1,699 @@
+---
+title: "MSCI: R Bootcamp"
+author: "Cole Beck"
+date: "09/09/2022"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+[r-win]: https://cran.r-project.org/bin/windows/base/R-4.2.1-win.exe
+
+[r-arm]: https://cran.r-project.org/bin/macosx/big-sur-arm64/base/R-4.2.1-arm64.pkg
+
+[r-intel]: https://cran.r-project.org/bin/macosx/base/R-4.2.1.pkg
+
+[rstudio-win]: https://download1.rstudio.org/desktop/windows/RStudio-2022.07.1-554.exe
+
+[rstudio-mac]: https://download1.rstudio.org/desktop/macos/RStudio-2022.07.1-554.dmg
+
+# Installation
+
+In today's R bootcamp, we want to install three things.
+
+1. R (version 4.2.1): <https://cran.r-project.org/>
+2. RStudio (version 2022.07.1-554): <https://www.rstudio.com/>
+3. R packages (rms, ggplot2, plotly)
+
+We will then run an example that should produce an HTML document. This will let us know each part is working correctly.
+
+## Windows
+
+On Windows you should install [R][r-win] and [RStudio][rstudio-win].
+
+## macOS
+
+On a Mac, you probably have an arm-based processor. If so, install [R-ARM][r-arm].  
+Alternatively if you have an Intel-based processor, use [R-Intel][r-intel].
+
+Then install [RStudio][rstudio-mac].
+
+# RStudio
+
+RStudio is like a text editor where we can run our R code.
+
+The application window has multiple panes. One can customize what's open at any point. In general the four quadrants are:
+
+* Upper Left: Open Files
+* Upper Right: Environment and History Browser. Good for seeing what variables are in memory and exploring them.
+* Lower Left: Console. The interactive command to the running R interpreter.
+* Lower Right: Directory browser, Plots, Packages, Help. 
+
+If one accidentally closes one, it's easily opened again from the `View` menu. 
+
+Install the packages `rms`, `ggplot2`, and `plotly` within RStudio. Run the following command from the "Console" pane.
+
+```{r eval = FALSE}
+install.packages(c('rms', 'ggplot2', 'plotly'), type = 'binary')
+```
+
+## Creating scripts
+
+R Scripts are simple text files, i.e. not Word or editors that contain formatting information. Just straight text, usually presented in a monospaced font. 
+
+From RStudio, select `File -> New File` and there are a large number of options. The important ones for this class are:
+
+* R Script. A file containing R code that is executable. If the file is open in the upper left pane of RStudio one can click `source` in the upper right of the file and it will execute in the console below.
+* R Markdown. A file containing a mix of R code and markdown. Using `Knit` produces an HTML or PDF document. A preview is available when switching to visual editing mode.
+* R Notebook. Uses R Markdown to provide an interactive version with inline previews.
+* Quarto Document. Same as R Markdown but supports additional features and output formats.
+
+A common question is "Which file type should I choose?" It never hurts to start with a basic R script, as once the code is written it can be sourced or even copied and pasted into one of the other documents. For writing code that will import data or perform data manipulation, I prefer R scripts. For teaching with interactive examples, I prefer using R notebook. I like to use R markdown when creating output that will be shared (either as HTML or PDF). Quarto has even more options for output format.
+
+## Exercise 1
+
+We need to run an example to ensure everything is working together.
+
+From RStudio, create a new R Markdown file. Select "HTML" as the output format. The document will contain text from the default template.
+
+An R code chunk starts with three backticks (\`), followed by a brace ({) and lowercase "r". What line has the first R code chunk? Add two lines to the first code chunk: `library(Hmisc)` and `library(ggplot2)`. Note that the first chunk has been labelled "setup" - this is the text following the lowercase "r".
+
+The second R code chunk shows the summary of the "cars" data set. Copy the chunk and make a new one below it. Change `summary` to `describe`. Change the chunk label from "cars" to "cars2".
+
+The third (now 4th) R code chunks plots the pressure data set. Copy the chunk and make a new one below it. Replace the text with `qplot(temperature, pressure, data = pressure)`. Change the chunk label from "pressure" to "pressure2".
+
+Your R Markdown file should now have five code chunks. Do you know how to navigate straight to a code chunk?
+
+Use the "Knit" button to create an HTML document.
+
+## Creating projects
+
+A project brings together several scripts as a project. One can create a project using `File -> New Project` and select an existing directory or create a blank one as desired. Existing projects can be opened with `File -> Open Project`.
+
+## Session & Working Directory
+
+There are two R sessions going inside R Studio when editing Rmd. One is the console and the other is used to generate Preview sections of documents. This can lead to confusion occasionally as variables that are seen at the console are not what is loaded in the document's environment. The `Run -> Restart R and Run All Chunks` restarts the Rmd environment and reruns all chunks in a document. This has the effect of resynchronizing both environments. 
+
+It is sometimes helpful to communicate which versions of packages are loaded when discussing issues. The command `sessionInfo()` provides a nice overview of this that is good for checking package versions loaded.
+
+```{r sessioninfo}
+sessionInfo()
+```
+
+The current working directory is available via `getwd()` and settable via `setwd("directory")`. All file loads and saves are relative to the current working directory.
+
+The menu option `Session -> Set Working Directory -> To Source File Location` is especially helpful.
+
+## Environment
+
+R maintains "environment frames" which are nested up to the top level. Each environment can contain variables in memory. The local environment is searched first then it follows up through the levels.
+
+```{r environment}
+x <- 3
+f <- function()
+{ # One can view the parenthesis as capturing a frame
+  x <- 4   # Local variable inner frame
+  cat("This is the inner 'x'", x, "\n") 
+}
+f()
+cat("This is the outer 'x'", x, "\n")
+```
+
+# Packages
+
+Packages contain R code and may often require the installation of other packages.  When I install `Hmisc`, I see that its dependency `acepack` is automatically installed:
+
+```
+Installing package into ‘/home/beckca/R/x86_64-pc-linux-gnu-library/3.1’
+(as ‘lib’ is unspecified)
+also installing the dependency ‘acepack’
+
+trying URL 'http://debian.mc.vanderbilt.edu/R/CRAN/src/contrib/acepack_1.3-3.3.tar.gz'
+Content type 'application/x-gzip' length 33590 bytes (32 Kb)
+opened URL
+==================================================
+downloaded 32 Kb
+
+trying URL 'http://debian.mc.vanderbilt.edu/R/CRAN/src/contrib/Hmisc_3.14-6.tar.gz'
+Content type 'application/x-gzip' length 611348 bytes (597 Kb)
+opened URL
+==================================================
+downloaded 597 Kb
+
+* installing *source* package ‘acepack’ ...
+.
+.
+.
+* DONE (acepack)
+* installing *source* package ‘Hmisc’ ...
+.
+.
+.
+* DONE (Hmisc)
+```
+
+## Install and updating via CRAN
+
+Install through CRAN repositories
+
+```{r, eval=FALSE}
+# Having code to install packages insider your Rmarkdown is bad practice. Don't do this.
+# This code is marked `eval=FALSE` in the Rmarkdown chunk so it is not evaluated.
+# install several packages
+install.packages('Hmisc')
+# update all packages
+update.packages(checkBuilt = TRUE, ask = FALSE)
+```
+
+## Install and update via Github
+
+Github is a code sharing platform. Packages are typically in a *rawer* state, but it can be important to use sometimes to get the latest bugfix at the risk of introducing a different bug. Installing through Github repositories is done using the `remotes` package.
+
+```{r, eval=FALSE}
+install.packages('remotes')
+require(remotes)
+install_github('harrelfe/rms')
+# [package]::[function]() is a common syntax that shows what package is associated with the given function
+# for example, this works like above but explicitly tells us we're using the "remotes" package
+# remotes::install_github('harrelfe/rms')
+```
+
+## Loading Packages
+
+Note that `library` is a bit of misnomer as R uses packages, not libraries.  From a technical standpoint, it's nice to recognize the distinction.  You may see `require` used in its place.  If the package is not installed, `library` will trigger an error while `require` will return FALSE.  Once loaded the functions created in the package are available to your R session.
+
+```{r, eval=FALSE}
+library(Hmisc)
+require(Hmisc)
+```
+
+# Help
+
+From the R console one can get help about any function by appending it with a `?`. 
+
+```{r, eval=FALSE}
+?lm
+```
+
+The R maintainers are quite pedantic about requiring package help files on functions up to date, complete and written in proper English. The benefit is that the user now has a reference for just about every function including from community sourced packages.
+
+# Rmarkdown
+
+Prior to Rmarkdown's availability, document generation was performed with LaTeX. LaTeX is a wonderful publishing tool (for PDF), that is also as complex as it is rich. Rmarkdown has come a long way to generating very rich documents that compile to either HTML or PDF with very little knowledge of the file formats of either. Document generation is an essential part of reproducible research and as such students are encouraged to learn more about markdown and Rmarkdown. Full support and possibilities are shown at <https://rmarkdown.rstudio.com/>.
+
+The cheat sheet is available at <https://raw.githubusercontent.com/rstudio/cheatsheets/main/rmarkdown.pdf>, or through Rstudio's menu bar: `Help -> Cheetsheets -> R Markdown Cheet Sheet`.
+
+[Quarto][quarto] is a next generation version of R Markdown from RStudio. Users are encouraged to evaluate it as an alternative.
+
+# Best Practices
+
+R and its packages will always be free. By using these tools, you ensure that you can produce the same results today, tomorrow, and in the future, and that others can reproduce these results as well.
+
+A blog post [RMarkdown Driven Development][reiderer] by Emily Riederer is an excellent introduction to best practices in producing statistical documents using Rmarkdown.
+
+One takeaway is to avoid the general pitfall of putting large amounts of data processing *inside* ones Rmarkdown reports, then minor changes to the report can require hours to compile. Large data processing and wrangling tasks should be done in scripts *outside* the report. The report should load the results of this process.
+
+Another great reference is Dr. Harrell's [analysis project workflow][rflow]. It can also be used as a template for quarto as its source code is available (by clicking the "</> Code" link).
+
+## Caching
+
+Chunks in Rmarkdown can be cached. I.e., the results of the last computation are saved and it's not rerun until a manual override by clicking on that section is done. It is recommended that one *not* do this as it inevitably leads to confusion when code or data changes are made and the document compilation does not reflect the changes. 
+
+A better approach for long computations is to do these with external scripts and save the results. The report can load these results and present as needed. It's very similar to caching, but is not prone to later confusion as it's a bit more direct that the report is loading the processed data file. In short do large data processing tasks *outside* of reports.
+
+## Setup
+
+Most Rmarkdown documents have a setup section that loads required libraries and sets up some options. The following snippet is the basic setup for an HTML document with interactive graphics. It loads the `Hmisc` package. Sets `knitr` to use markdown by default. Sets the graphics option to use `plotly`. It also pulls some HTML rendering options from the markup specs for use later and stores this in a global variable `mu`.
+
+```{r setup, results='hide'}
+require(Hmisc)
+knitrSet(lang='markdown', h=4.5, fig.path='png/', fig.align='left')
+# knitrSet redirects all messages to messages.txt
+options(grType='plotly') # for certain graphics functions
+mu <- markupSpecs$html   # markupSpecs is in Hmisc
+```
+
+# Data
+
+An R `data.frame` consists of a collection of values. In a well-structured data set, each value is associated with a variable (column) and observation (row). A column contains values of a single data type.
+
+## Types of data
+
+- numeric
+- character
+- logical
+- date (time)
+
+## Special types
+
+- Undefined: NULL
+- Missing: NA
+- Infinite: Inf, -Inf
+- Not a Number: NaN
+
+## Categorical variables
+
+In R, categorical variables are called "factors". Values look like character strings but are stored as numeric.
+
+```{r}
+race <- factor(sample(3, 10, replace = TRUE), labels = c('white','black','other'))
+race
+unclass(race)
+factor(sample(c('light','moderate','vigorous'), 10, replace = TRUE), ordered = TRUE)
+```
+
+## Numeric vectors
+
+Sometimes you will need to create a collection of numeric values. A one-dimensional collection of values is called a vector. Here are a few ways to create numeric vectors.
+
+```{r}
+numeric(3)
+rep(1, 3)
+c(1, 2, 3)
+1:3
+seq(3)
+seq(1, 10, by = 2)
+seq(1, 21, length.out = 6)
+sample(10, 5)
+sample(3, 5, replace = TRUE)
+```
+
+## Updating with upData
+
+The `getHdata` function is used to fetch a dataset from the Vanderbilt Biostatistics [DataSets][datasets] web site. We can use the `upData` function to make updates to a data set. Here it is used to
+
+- create a new variable from an old one
+- add labels to 2 variables
+- add units to the new variable
+- remove the old variable
+- automatically move units of measurements from parenthetical expressions in labels to separate `units` attributes used by `Hmisc` and `rms` functions for table making and graphics
+
+```{r metadata, results='asis'}
+getHdata(pbc)
+pbc <- upData(pbc,
+              fu.yrs = fu.days / 365.25,
+              labels = c(fu.yrs = 'Follow-up Time',
+                         status = 'Death or Liver Transplantation'),
+              units = c(fu.yrs = 'year'),
+              drop  = 'fu.days',
+              moveUnits=TRUE, html=TRUE)
+```
+
+## Data Dictionary
+
+`contents` is used to print a data dictionary, run through an `html` method for nicer output.
+
+```{r datadict}
+html(contents(pbc), maxlevels=10, levelType='table')
+```
+
+## Retrieving a row
+
+Put brackets after the data set name. The row number should be to the left of the comma.
+
+```{r}
+pbc[1,]
+pbc[100,]
+pbc[nrow(pbc),]
+```
+
+## Retrieving a column
+
+Put brackets after the data set name. The column name or number should be to the right of the comma. In this example, only the first 10 results are returned.
+
+```{r}
+pbc[1:10,1]
+pbc[1:10,'age']
+# dollar-sign also works
+pbc$chol[1:10]
+```
+
+Here's a few useful functions we can use on a variable. Watch out for missing values.
+
+```{r}
+mean(pbc$age)
+# testing if variable equals a value returns TRUE/FALSE
+# using "sum" will count TRUE values
+sum(pbc[,'spiders'] == 'present', na.rm = TRUE)
+table(pbc$sex)
+with(pbc, table(sex, spiders, useNA = 'always'))
+```
+
+## Exercise 2
+
+```{r}
+getHdata(vlbw)
+```
+
+Use `contents` to answer these questions about the "vlbw" data set.
+
+1. How many rows are in this data set?
+2. Which variable is missing the most data?
+3. Which variables are categorical?
+
+Use `mean`, `sum`, or `table` to answer these questions.
+
+4. What race appears in this data set the most?
+5. How many twins (multiple gestation) are in the data set?
+6. What is the mean gestational age?
+
+# Cleaning and Importing Data
+
+Loading a data set into R typically involves reading a text file. RStudio has an "Import Dataset" button.
+
+## Text files
+
+* read.table - work with data in table format
+* read.csv - CSV files
+* read.delim - tab-delimited files
+* scan - more general function for reading in data
+
+## Binary representation of R objects
+
+Compressed data and loads faster.
+
+* RData
+* `feather` package
+
+## Database connections
+
+Allows data queries.
+
+* `RODBC` package
+* `RSQLite` package
+
+## Other statistical packages
+
+* `Hmisc` package: `sas.get`, `sasxport.get`
+* `haven` package: `read_sas`, `read_sav`, `read_dta`
+* `foreign` package
+* Stat/Transfer - not free nor open source
+
+## Data Cleaning
+
+Data sets often need to be manipulated to become well-structured.
+
+Hadley Wickham's [Tidy Data][tidy] provides an excellent overview on how to clean messy data sets.
+
+## Column header contains values
+
+```{r}
+# politics and religion
+senateReligion <- data.frame(religion=c('Protestant','Catholic','Jewish','Mormon','Buddhist',"Don't Know/Refused"),
+                          Democrats=c(21,15,9,0,1,4),
+                          Republicans=c(37,10,0,3,0,0))
+senateReligion
+```
+
+Democrats/Republicans is a value that should be stored in a column named "party".
+
+```{r}
+cntParty <- stack(senateReligion[,c('Democrats','Republicans')])
+# since "cntParty" is longer, "1:6" is repeated as necessary
+cbind(cntParty, 1:6)
+senRel <- cbind(senateReligion[,'religion'], cntParty)
+names(senRel) <- c('religion','count','party')
+senRel
+```
+
+## Multiple variables in a column
+
+```{r}
+pets <- data.frame(county=c('Davidson','Rutherford','Cannon'),
+                   male.dog=c(50,150,70), female.dog=c(60,150,70),
+                   male.cat=c(30,100,50), female.cat=c(30,70,40),
+                   male.horse=c(6,30,20), female.horse=c(6,28,19))
+pets
+```
+
+Column names have combined "sex" and "animal" - these should be variables (separate columns).
+
+```{r}
+cntPets <- stack(pets[,-1])
+pets2 <- cbind(pets[,'county'], cntPets)
+names(pets2) <- c('county','count','ind')
+pets2
+```
+
+Note that we can find sex and animal by using period (.) as a delimiter. For example in "male.dog", "male" is left of the period and "dog" is right of the period. In cases like this we can use the `strsplit` function. It can be hard to use though.
+
+We have to "escape" the period with slashes. Also, the "ind" column is a factor variable, not a character string, which produces an error.
+
+```{r}
+tryCatch(strsplit(pets2[,'ind'], '\\.'), error = function(e){ e })
+```
+
+It also produces "list" output.
+
+```{r}
+saType <- strsplit(as.character(pets2[,'ind']), '\\.')
+saType
+saType[[1]]
+```
+
+First `for` loop, allows iterating over a sequence.
+
+```{r}
+# create two columns, set to missing/NA
+pets2[,c('sex','animal')] <- NA
+# iterate over the number of rows
+# "i" is essentially the row number
+for(i in seq(nrow(pets2))) {
+  pets2[i, c('sex','animal')] <- saType[[i]]
+}
+# delete "ind" column
+pets2[,'ind'] <- NULL
+pets2
+```
+
+## Variables in a row
+
+```{r}
+set.seed(1000)
+d1 <- rnorm(1000, 5, 2)
+d2 <- runif(1000, 0, 10)
+d3 <- rpois(1000, 5)
+d4 <- rbinom(1000, 10, 0.5)
+x <- data.frame(distribution=c(rep('normal',2),rep('uniform',2),rep('poisson',2),rep('binomial',2)),
+           stat=rep(c('mean','sd'),4),
+           value=c(mean(d1), sd(d1), mean(d2), sd(d2), mean(d3), sd(d3), mean(d4), sd(d4)))
+x
+```
+
+The stat variable is either "mean" or "sd". These should actually be columns not values.
+
+```{r}
+distStats <- unstack(x, form = value~stat)
+distStats
+# "unstack"-ing reduces the number of rows from 8 to 4
+# re-combining the data will require removing the duplicate rows
+# where are the first occurrences of each distribution?
+which(!duplicated(x[,'distribution']))
+cbind(distribution = x[c(1,3,5,7),'distribution'], distStats)
+# a similar approach exists with the "reshape" function
+reshape(x, timevar = 'stat', idvar = 'distribution', direction = 'wide')
+```
+
+## Normalization and merging
+
+Merging two data sets requires a common variable that can link the two together.
+
+```{r}
+employees <- data.frame(id = 1:4, Name = c('Eddie','Andrea','Steve','Theresa'),
+                        job = c('engineer','accountant','statistician','technician'))
+set.seed(11)
+hours <- data.frame(id = sample(4, 10, replace = TRUE),
+                    week = 1:10, hours = sample(30:60, 10, replace=TRUE))
+merge(employees, hours)
+# the linking variable may need to be specified
+# "by.x" refers to the first data set, "by.y" the second
+# merge(employees, hours, by.x = 'id', by.y = 'id')
+```
+
+The default merge will only keep observations found in both data sets. Use "all.x", "all.y", or "all" to keep observations without links.
+
+```{r}
+empHours <- merge(employees, hours, all.x = TRUE)
+empHours
+```
+
+To remove a merge, use the `unique` function with the columns specified.
+
+```{r}
+unique(empHours[,c('id','Name','job')])
+empHours[,c('id','week','hours')]
+```
+
+Exclude rows with missing data.
+
+```{r}
+empHours[!is.na(empHours[,'week']), c('id','week','hours')]
+```
+
+# Full Example with Quarto
+
+Frank has provided a short [example][se-src] to build a reproducible report with RStudio and Quarto. The final output can be viewed [here][se-out].
+
+The example can be opened in RStudio with the following command. Clicking the "Render" button with produce HTML output.
+
+```{r stressecho, eval = FALSE}
+require(Hmisc)
+getRs('stressecho.qmd', put='rstudio')
+```
+
+# Data Visualization
+
+In ggplot, the type of plot references a "geom".
+
+geom | variable 1 | variable 2
+-----|------------|-----------
+density | continuous | NA
+histogram | continuous | NA
+bar | discrete | NA
+point | continuous | continuous
+boxplot | discrete | continuous
+dotplot | discrete | continuous
+violin | discrete | continuous
+
+### Examples
+
+We'll return to the "vlbw" data set used in the second exercise.
+
+```{r}
+qplot(bwt, data=vlbw, geom='density')
+```
+
+```{r}
+qplot(bwt, data=vlbw, geom='histogram')
+```
+
+```{r}
+qplot(race, data=vlbw, geom='bar')
+```
+
+```{r}
+qplot(gest, bwt, data=vlbw, geom='point')
+```
+
+```{r}
+qplot(sex, bwt, data=vlbw, geom='boxplot')
+```
+
+```{r}
+qplot(sex, bwt, data=vlbw, geom='dotplot', binaxis = "y", binwidth = 10)
+```
+
+```{r}
+qplot(sex, bwt, data=vlbw, geom='violin')
+```
+
+### Overlapping with `jitter`
+
+We can provide overlapping geometeries. Order matters.
+
+```{r}
+qplot(sex, bwt, data=vlbw, geom=c('jitter','boxplot'))
+```
+
+```{r}
+qplot(sex, bwt, data=vlbw, geom=c('boxplot','jitter'))
+```
+
+### Aesthetics
+
+We can use aesthetics to map variables to "x" and "y" as well as color, size, and shape.
+
+```{r}
+qplot(gest, bwt, color=ivh, data=vlbw)
+```
+
+```{r}
+qplot(gest, bwt, color=sex, shape=sex, data=vlbw)
+```
+
+```{r}
+ggplot(data=vlbw) + geom_point(mapping = aes(x=gest, y=bwt, size=lol))
+```
+
+### Faceting
+
+If we want to compare plots by a categorical variable, we can use faceting.
+
+Faceting introduces the "~" (tilde) character. Think of it as having a left-hand side (LHS) and right-hand side (RHS).
+
+```{r}
+bestRows <- complete.cases(vlbw[,c('gest','bwt','sex')])
+p <- ggplot(data=vlbw[bestRows,]) + geom_point(mapping = aes(x=gest, y=bwt))
+p
+```
+
+A plot for each race.
+
+```{r}
+p + facet_wrap(~ race)
+```
+
+A plot for each race/sex combination.
+
+```{r}
+p + facet_wrap(~ race + sex)
+```
+
+A plot for each race/sex combination, organized into row (LHS, sex) and column (RHS, race).
+
+```{r}
+p + facet_grid(sex ~ race)
+```
+
+A plot for each race, organized into columns (RHS).
+
+```{r}
+p + facet_grid(. ~ race)
+```
+
+A plot for each race, organized into rows (LHS).
+
+```{r}
+p + facet_grid(race ~ .)
+```
+
+# Learning Resources
+
+type|site|link
+-----|-----|-----
+list|stackoverflow|https://stackoverflow.com/tags/r/info
+forum|stackoverflow|https://stackoverflow.com/questions/tagged/r
+tutorial|Matloff|https://github.com/matloff/fasteR
+tutorial|swirl|https://swirlstats.com/students.html
+book|R for Data Science|http://r4ds.had.co.nz/
+
+Also: Frank, Dandan, Cole, and each other
+
+# Worth Mentioning
+
+## tidyverse
+
+Wickham's "Tidy Data" philosophy was concurrent with the development of a suite of R packages useful for data management.  This includes `ggplot2` and `haven` as well as many others such as `dplyr`, `stringr`, and `tidyr`.
+
+## data.table
+
+`data.table` is another beneficial package for data manipulation.  It provides similar functionality to the `data.frame`, but works well with large data sets. It minimizes memory operations. It is best to develop ones code using either data.frame or data.table from the beginning as they are not exactly equivalent and surprises can happen upon dropping in one for the other.
+
+# Computing Environment[^1] {#compenv}
+`r mu$session()`
+
+[^1]: `mu` is a copy of the part of the `Hmisc` package object `markupSpecs` that is for html.  It includes a function `session` that renders the session environment (including package versions) in html.
+
+[quarto]: https://quarto.org/
+
+[reiderer]: https://t.co/ZBk1OrTXYp
+
+[rflow]: https://www.fharrell.com/post/rflow
+
+[datasets]: https://hbiostat.org/data/ "DataSets"
+
+[tidy]: http://vita.had.co.nz/papers/tidy-data.pdf "Tidy Data"
+
+[se-src]: https://github.com/harrelfe/rscripts/blob/master/stressecho.qmd
+
+[se-out]: http://hbiostat.org/attach/stressecho.html
