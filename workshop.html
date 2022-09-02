@@ -415,7 +415,11 @@ Alternatively if you have an Intel-based processor, use <a href="https://cran.r-
 <h2>Exercise 1</h2>
 <p>We need to run an example to ensure everything is working together.</p>
 <p>From RStudio, create a new R Markdown file. Select “HTML” as the output format. The document will contain text from the default template.</p>
-<p>An R code chunk starts with three backticks (`), followed by a brace ({) and lowercase “r”. What line has the first R code chunk? Add two lines to the first code chunk: <code>library(Hmisc)</code> and <code>library(ggplot2)</code>. Note that the first chunk has been labelled “setup” - this is the text following the lowercase “r”.</p>
+<p>An R code chunk starts with three backticks, followed by a lowercase “r” surrounded by braces:</p>
+<pre class="markdown"><code>```{r}
+# example R chunk
+```</code></pre>
+<p>What line has the first R code chunk? Add two lines to the first code chunk: <code>library(Hmisc)</code> and <code>library(ggplot2)</code>. Note that the first chunk has been labelled “setup” - this is the text following the lowercase “r”.</p>
 <p>The second R code chunk shows the summary of the “cars” data set. Copy the chunk and make a new one below it. Change <code>summary</code> to <code>describe</code>. Change the chunk label from “cars” to “cars2”.</p>
 <p>The third (now 4th) R code chunks plots the pressure data set. Copy the chunk and make a new one below it. Replace the text with <code>qplot(temperature, pressure, data = pressure)</code>. Change the chunk label from “pressure” to “pressure2”.</p>
 <p>Your R Markdown file should now have five code chunks. Do you know how to navigate straight to a code chunk?</p>
@@ -583,14 +587,14 @@ mu &lt;- markupSpecs$html   # markupSpecs is in Hmisc</code></pre>
 <p>In R, categorical variables are called “factors”. Values look like character strings but are stored as numeric.</p>
 <pre class="r"><code>race &lt;- factor(sample(3, 10, replace = TRUE), labels = c(&#39;white&#39;,&#39;black&#39;,&#39;other&#39;))
 race</code></pre>
-<pre><code> [1] black white white black other white black black white other
+<pre><code> [1] white other black white other white white white white black
 Levels: white black other</code></pre>
 <pre class="r"><code>unclass(race)</code></pre>
-<pre><code> [1] 2 1 1 2 3 1 2 2 1 3
+<pre><code> [1] 1 3 2 1 3 1 1 1 1 2
 attr(,&quot;levels&quot;)
 [1] &quot;white&quot; &quot;black&quot; &quot;other&quot;</code></pre>
 <pre class="r"><code>factor(sample(c(&#39;light&#39;,&#39;moderate&#39;,&#39;vigorous&#39;), 10, replace = TRUE), ordered = TRUE)</code></pre>
-<pre><code> [1] vigorous moderate light    moderate moderate vigorous vigorous light    moderate light   
+<pre><code> [1] light    vigorous light    vigorous vigorous vigorous vigorous moderate moderate vigorous
 Levels: light &lt; moderate &lt; vigorous</code></pre>
 </div>
 <div id="numeric-vectors" class="section level2">
@@ -611,9 +615,9 @@ Levels: light &lt; moderate &lt; vigorous</code></pre>
 <pre class="r"><code>seq(1, 21, length.out = 6)</code></pre>
 <pre><code>[1]  1  5  9 13 17 21</code></pre>
 <pre class="r"><code>sample(10, 5)</code></pre>
-<pre><code>[1]  9  1  3 10  4</code></pre>
+<pre><code>[1]  2  4 10  9  5</code></pre>
 <pre class="r"><code>sample(3, 5, replace = TRUE)</code></pre>
-<pre><code>[1] 3 1 3 2 1</code></pre>
+<pre><code>[1] 1 3 1 2 1</code></pre>
 </div>
 <div id="updating-with-updata" class="section level2">
 <h2>Updating with upData</h2>
@@ -665,23 +669,23 @@ Input object size:   80952 bytes;    19 variables    418 observations
 <hr><h4>Data frame:pbc</h4>418 observations and 19 variables, maximum # NAs:136  
  <hr>
  <style>
- .hmisctable532495 {
+ .hmisctable933999 {
  border: 1px solid gray;
  border-collapse: collapse;
  font-size: 100%;
  }
- .hmisctable532495 td {
+ .hmisctable933999 td {
  text-align: right;
  padding: 0 1ex 0 1ex;
  }
- .hmisctable532495 th {
+ .hmisctable933999 th {
  color: Black;
  text-align: center;
  padding: 0 1ex 0 1ex;
  font-weight: bold;
  }
  </style>
- <table class="hmisctable532495" border="1">
+ <table class="hmisctable933999" border="1">
  <tr><th>Name</th><th>Labels</th><th>Units</th><th>Levels</th><th>Storage</th><th>NAs</th></tr>
  <tr><td>bili</td><td>Serum Bilirubin</td><td>mg/dl</td><td></td><td>double</td><td>  0</td></tr>
  <tr><td>albumin</td><td>Albumin</td><td>gm/dl</td><td></td><td>double</td><td>  0</td></tr>
@@ -706,23 +710,23 @@ Input object size:   80952 bytes;    19 variables    418 observations
 
  <hr>
  <style>
- .hmisctable638544 {
+ .hmisctable850664 {
  border: 1px solid gray;
  border-collapse: collapse;
  font-size: 100%;
  }
- .hmisctable638544 td {
+ .hmisctable850664 td {
  text-align: right;
  padding: 0 1ex 0 1ex;
  }
- .hmisctable638544 th {
+ .hmisctable850664 th {
  color: Black;
  text-align: center;
  padding: 0 1ex 0 1ex;
  font-weight: bold;
  }
  </style>
- <table class="hmisctable638544" border="1">
+ <table class="hmisctable850664" border="1">
  <tr><th>Variable</th><th>Levels</th></tr>
  <tr><td><a name="levels.sex">sex</a></td><td>male</td></tr>
  <tr><td></td><td>female</td></tr>

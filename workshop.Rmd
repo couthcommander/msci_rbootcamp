@@ -76,7 +76,15 @@ We need to run an example to ensure everything is working together.
 
 From RStudio, create a new R Markdown file. Select "HTML" as the output format. The document will contain text from the default template.
 
-An R code chunk starts with three backticks (\`), followed by a brace ({) and lowercase "r". What line has the first R code chunk? Add two lines to the first code chunk: `library(Hmisc)` and `library(ggplot2)`. Note that the first chunk has been labelled "setup" - this is the text following the lowercase "r".
+An R code chunk starts with three backticks, followed by a lowercase "r" surrounded by braces:
+
+````markdown
+`r ''````{r}
+# example R chunk
+```
+````
+
+What line has the first R code chunk? Add two lines to the first code chunk: `library(Hmisc)` and `library(ggplot2)`. Note that the first chunk has been labelled "setup" - this is the text following the lowercase "r".
 
 The second R code chunk shows the summary of the "cars" data set. Copy the chunk and make a new one below it. Change `summary` to `describe`. Change the chunk label from "cars" to "cars2".
 
