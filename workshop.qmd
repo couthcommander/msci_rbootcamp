@@ -208,7 +208,7 @@ The R maintainers are quite pedantic about requiring package help files on funct
 
 # Rmarkdown
 
-Prior to Rmarkdown's availability, document generation was performed with LaTeX. LaTeX is a wonderful publishing tool (for PDF), that is also as complex as it is rich. Rmarkdown has come a long way to generating very rich documents that compile to either HTML or PDF with very little knowledge of the file formats of either. Document generation is an essential part of reproducible research and as such students are encouraged to learn more about markdown and Rmarkdown. Full support and possibilities are shown at <https://rmarkdown.rstudio.com/>.
+Prior to Rmarkdown's availability, document generation was performed with LaTeX. LaTeX is a wonderful publishing tool (for PDF), that is also as complex as it is rich. Rmarkdown has come a long way to generating very rich documents that compile to either HTML or PDF with very little knowledge of the file formats of either. Document generation is an essential part of reproducible research and as such students are encouraged to learn more about markdown and Rmarkdown. Full support and possibilities are shown at <https://rmarkdown.rstudio.com/>. [Markdown Basics][mdbasics] is a good place to start.
 
 The cheat sheet is available at <https://raw.githubusercontent.com/rstudio/cheatsheets/main/rmarkdown.pdf>, or through Rstudio's menu bar: `Help -> Cheetsheets -> R Markdown Cheet Sheet`.
 
@@ -551,6 +551,12 @@ require(Hmisc)
 getRs('stressecho.qmd', put='rstudio')
 ```
 
+## Exercise 3
+
+Create a R Markdown file that will create output that looks like [this](exercise_output.html).
+
+Refer to this document, exercise 1, [Markdown Basics][mdbasics] and the stressecho example.
+
 # Data Visualization
 
 In ggplot, the type of plot references a "geom".
@@ -703,6 +709,8 @@ Wickham's "Tidy Data" philosophy was concurrent with the development of a suite 
 `r mu$session()`
 
 [^1]: `mu` is a copy of the part of the `Hmisc` package object `markupSpecs` that is for html.  It includes a function `session` that renders the session environment (including package versions) in html.
+
+[mdbasics]: https://rmarkdown.rstudio.com/authoring_basics.html
 
 [quarto]: https://quarto.org/
 
