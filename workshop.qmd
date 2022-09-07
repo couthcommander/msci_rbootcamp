@@ -3,7 +3,9 @@ title: "MSCI: R Bootcamp"
 author: "Cole Beck"
 date: "09/09/2022"
 format:
-  html: default
+  html:
+    self-contained: true
+    toc: true
 ---
 
 [r-win]: https://cran.r-project.org/bin/windows/base/R-4.2.1-win.exe
